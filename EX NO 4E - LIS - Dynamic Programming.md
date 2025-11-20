@@ -1,103 +1,93 @@
 
-# EX 4D Longest Common SubSequence - Dynamic Programming.
+# EX 4E Longest Increasing Subsequence - Dynamic Programming.
 ## DATE: 20/11/2025
 ## AIM:
 To write a Java program to for given constraints.
-Given two strings text1 and text2, return the length of their longest common subsequence. If there is no common subsequence, return 0.
-A subsequence of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters.
-
-For example, "ace" is a subsequence of "abcde".
-A common subsequence of two strings is a subsequence that is common to both strings.
-
-Input: text1 = "abcde", text2 = "ace" 
-Output: 3  
-Explanation: The longest common subsequence is "ace" and its length is 3.
-Constraints:
-
-1 <= text1.length, text2.length <= 1000
-text1 and text2 consist of only lowercase English characters.
-
+Given an integer array nums, return the length of the longest strictly increasing subsequence.
+Example 1:
+Input: nums = [10,9,2,5,3,7,101,18]
+Output: 4
+Explanation: The longest increasing subsequence is [2,3,7,101], therefore the length is 4.
 ## Algorithm
-**Procedure:**
 
 1. **Input:**
 
-   * Read two strings, `text1` and `text2`, from the user.
+   * Read the integer `n` (size of array).
+   * Read `n` integers into the array `nums`.
 
 2. **Initialization:**
 
-   * Let `m` = length of `text1` and `n` = length of `text2`.
-   * Create a 2D array `dp[m+1][n+1]`, where `dp[i][j]` stores the length of the longest common subsequence (LCS) between `text1[0..i-1]` and `text2[0..j-1]`.
+   * Create an array `dp[n]`, where `dp[i]` stores the **length of the longest increasing subsequence (LIS)** ending at index `i`.
+   * Initialize all values of `dp` to `1`, since each element is an LIS of length `1` by itself.
+   * Initialize `maxLen = 1` to keep track of the overall maximum LIS length.
 
-3. **Filling the DP Table:**
+3. **Dynamic Programming Logic:**
 
-   * For each `i` from `1` to `m`:
+   * For each element `nums[i]` (from index `1` to `n-1`):
 
-     * For each `j` from `1` to `n`:
+     * Compare it with all previous elements `nums[j]` (where `j < i`).
+     * If `nums[i] > nums[j]`, it means we can extend the subsequence ending at `j`.
+       → Update `dp[i] = max(dp[i], dp[j] + 1)`
+   * After each iteration, update `maxLen = max(maxLen, dp[i])`.
 
-       * If characters match (`text1.charAt(i-1) == text2.charAt(j-1)`):
-         → `dp[i][j] = 1 + dp[i-1][j-1]`
-       * Else:
-         → `dp[i][j] = max(dp[i-1][j], dp[i][j-1])`
+4. **Output:**
 
-4. **Result:**
-
-   * The value `dp[m][n]` gives the **length of the longest common subsequence**.
-
-5. **Output:**
-
-   * Print the result:
-     `"Length of Longest Common Subsequence: " + dp[m][n]`
-  
+   * Print `maxLen`, which represents the **length of the longest increasing subsequence**.
+ 
 
 ## Program:
 ```
 /*
 Program to implement Reverse a String
-Developed by: Saranya S.
+Developed by:Saranya S
 Register Number:  212223220101
 */
-import java.util.Scanner;
+import java.util.*;
 
-public class Solution {
+public class LongestIncreasingSubsequence {
 
-    public int longestCommonSubsequence(String text1, String text2) {
-        int m = text1.length();
-        int n = text2.length();
+    public static int lengthOfLIS(int[] nums) {
+        if (nums == null || nums.length == 0) return 0;
 
-        int[][] dp = new int[m + 1][n + 1];
+        int n = nums.length;
+        int[] dp = new int[n]; 
+        Arrays.fill(dp, 1);
 
-        for (int i = 1; i <= m; i++) {
-            for (int j = 1; j <= n; j++) {
-                if (text1.charAt(i - 1) == text2.charAt(j - 1)) {
-                    dp[i][j] = 1 + dp[i - 1][j - 1];
-                } else {
-                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+        int maxLen = 1;
+
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
                 }
             }
+            maxLen = Math.max(maxLen, dp[i]);
         }
 
-        return dp[m][n];
+        return maxLen;
     }
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        Solution sol = new Solution();
+        Scanner scanner = new Scanner(System.in);
 
-        String text1 = sc.nextLine().replaceAll("\"", "");
-        String text2 = sc.nextLine().replaceAll("\"", "");
+        int n = scanner.nextInt();
+        int[] nums = new int[n];
 
-        int lcsLength = sol.longestCommonSubsequence(text1, text2);
-        System.out.println("Length of Longest Common Subsequence: " + lcsLength);
+        for (int i = 0; i < n; i++) {
+            nums[i] = scanner.nextInt();
+        }
 
-        sc.close();
+        int result = lengthOfLIS(nums);
+        System.out.println("Length of Longest Increasing Subsequence: " + result);
+
+        scanner.close();
     }
 }
 
 ```
 
 ## Output:
-<img width="833" height="255" alt="image" src="https://github.com/user-attachments/assets/f08d14f5-2d4e-454b-a4c0-ecbe868c1ad3" />
+<img width="812" height="257" alt="image" src="https://github.com/user-attachments/assets/520c0acf-b436-422b-9aff-b9e07ce4377b" />
 
 
 
